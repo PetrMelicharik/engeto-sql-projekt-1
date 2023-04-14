@@ -54,3 +54,40 @@ AND tap.yearly_price = tap2.yearly_price +12
 ORDER BY percentual_change
 ;
 
+-- otázka číslo 4
+
+CREATE OR REPLACE TABLE t_avg_pay_all
+SELECT
+payroll_year,
+round(avg(avarage_pay),0) AS avarage_payment
+FROM t_avg_pay tap
+GROUP BY payroll_year
+;
+
+CREATE OR REPLACE TABLE t_avg_price_all
+SELECT
+yearly_price,
+round(avg(avarage_price), 2) AS avarage_product_price
+FROM t_avg_price tap
+GROUP BY yearly_price
+;
+
+CREATE OR REPLACE TABLE t_compare_avg_pay_and_price
+SELECT
+tapa.payroll_year,
+tapa.avarage_payment,
+tapa2.avarage_product_price
+FROM t_avg_pay_all tapa
+JOIN t_avg_price_all tapa2
+ON tapa.payroll_year = tapa2.yearly_price
+;
+
+SELECT *,
+round((tcapap2.avarage_payment - tcapap.avarage_payment) / tcapap.avarage_payment * 100, 1) AS yearly_pay_change,
+round((tcapap2.avarage_product_price - tcapap.avarage_product_price) /tcapap.avarage_product_price * 100, 1) AS yearly_price_change
+FROM t_compare_avg_pay_and_price tcapap
+JOIN t_compare_avg_pay_and_price tcapap2
+ON tcapap2.payroll_year = tcapap.payroll_year + 1
+;
+
+
