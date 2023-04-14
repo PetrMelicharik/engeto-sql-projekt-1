@@ -1,3 +1,5 @@
+-- vytvoření tabulky průměrných mezd
+
 CREATE OR REPLACE TABLE t_avg_pay AS
 SELECT
 cp.payroll_year,
@@ -18,6 +20,7 @@ GROUP BY cp.payroll_year, cpib.name
 ORDER BY cpib.name, cp.payroll_year
 ;
 
+-- vytvoření tabulky průměrných cen
 
 CREATE OR REPLACE TABLE t_avg_price AS
 SELECT 
@@ -36,6 +39,7 @@ GROUP BY yearly_price, cpc.name
 ORDER BY cpc.name, yearly_price
 ;
 
+-- vytvoření primární tabulky spojením předchozích dvou tabulek
 
 CREATE OR REPLACE TABLE t_petr_melicharik_SQL_primary_final AS
 SELECT
@@ -53,6 +57,7 @@ JOIN t_avg_price tap2
 ON tap.payroll_year = tap2.yearly_price 
 ;
 
+-- vytvoření sekundární finální tabulky
 
 CREATE OR REPLACE TABLE t_petr_melicharik_sql_secondary_final AS
 SELECT
