@@ -91,3 +91,36 @@ ON tcapap2.payroll_year = tcapap.payroll_year + 1
 ;
 
 
+-- otázka číslo 5
+
+CREATE OR REPLACE TABLE t_gdp_avg_payprice
+AS
+SELECT
+tpmssf.country,
+tpmssf.`year`,
+tpmssf.GDP,
+tcapap.avarage_payment,
+tcapap.avarage_product_price
+FROM t_petr_melicharik_sql_secondary_final tpmssf
+JOIN t_compare_avg_pay_and_price tcapap
+ON tpmssf.`year` = tcapap.payroll_year
+WHERE country = 'Czech republic'
+;
+
+SELECT
+tgap.`year`,
+tgap.GDP,
+tgap.avarage_payment,
+tgap.avarage_product_price,
+tgap2.`year`,
+tgap2.GDP,
+tgap2.avarage_payment,
+tgap2.avarage_product_price,
+round((tgap2.GDP - tgap.GDP) / tgap.GDP * 100, 2) AS gdp_change,
+round((tgap2.avarage_payment - tgap.avarage_payment) / tgap.avarage_payment * 100, 2) AS pay_change,
+round((tgap2.avarage_product_price  - tgap.avarage_product_price) / tgap.avarage_product_price * 100, 2) AS product_change
+FROM t_gdp_avg_payprice tgap
+JOIN t_gdp_avg_payprice tgap2
+ON tgap2.`year` = tgap.`year` +1
+;
+
