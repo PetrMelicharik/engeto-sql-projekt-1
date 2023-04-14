@@ -40,3 +40,17 @@ GROUP BY `year`, product_code
 
 -- otázka číslo 3
 
+SELECT
+tap.name,
+tap2.yearly_price,
+tap2.avarage_price,
+tap.yearly_price,
+tap.avarage_price,
+round((tap.avarage_price - tap2.avarage_price) / tap2.avarage_price  * 100, 1) AS percentual_change
+FROM t_avg_price tap
+JOIN t_avg_price tap2
+ON tap.name = tap2.name
+AND tap.yearly_price = tap2.yearly_price +12
+ORDER BY percentual_change
+;
+
