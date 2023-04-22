@@ -39,19 +39,30 @@ GROUP BY `year`, product_code
 
 -- otázka číslo 3
 
+CREATE OR REPLACE TABLE t_avg_price_raise
 SELECT
-tap.name,
-tap2.yearly_price,
-tap2.avarage_price,
 tap.yearly_price,
+tap.code,
+tap.name,
 tap.avarage_price,
-round((tap.avarage_price - tap2.avarage_price) / tap2.avarage_price  * 100, 1) AS percentual_change
+tap2.yearly_price AS yearly_price_2,
+tap2.avarage_price AS avarage_price_2,
+round((tap2.avarage_price - tap.avarage_price) / tap.avarage_price  * 100, 1) AS percentual_change
 FROM t_avg_price tap
 JOIN t_avg_price tap2
-ON tap.name = tap2.name
-AND tap.yearly_price = tap2.yearly_price +12
-ORDER BY percentual_change
+ON
+tap2.yearly_price = tap.yearly_price +1
+WHERE tap.code = tap2.code AND tap2.avarage_price > tap.avarage_price
 ;
+
+SELECT
+name,
+AVG(percentual_change) AS avg_raise
+FROM t_avg_price_raise tapr
+GROUP BY code
+ORDER BY avg_raise
+;
+
 
 -- otázka číslo 4
 
