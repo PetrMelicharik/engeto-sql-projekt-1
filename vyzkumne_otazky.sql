@@ -5,9 +5,9 @@ SELECT
 tap.payroll_year,
 tap.code,
 tap.name,
-tap.avarage_pay,
+ROUND(tap.avarage_pay, 0) AS avarage_pay,
 tap2.payroll_year AS payroll_year_2,
-tap2.avarage_pay AS avarage_pay_2
+ROUND(tap2.avarage_pay, 0) AS avarage_pay_2
 FROM t_avg_pay tap
 JOIN t_avg_pay tap2
 ON
