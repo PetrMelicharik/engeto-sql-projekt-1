@@ -1,27 +1,26 @@
 -- otázka číslo 1
 
-CREATE OR REPLACE TABLE t_avg_pay_comp 
-AS
+CREATE OR REPLACE TABLE t_avg_pay_yearly AS
 SELECT
-tpmspf.industry_name,
-tpmspf.`year` AS year1,
-ROUND (tpmspf.avarage_pay,0) AS avg_pay_2006,
-tpmspf2.`year` AS year2,
-ROUND (tpmspf2.avarage_pay,0) AS avg_pay_2018
-FROM t_petr_melicharik_sql_primary_final tpmspf
-JOIN t_petr_melicharik_sql_primary_final tpmspf2 
-ON tpmspf.industry_name = tpmspf2.industry_name 
-WHERE tpmspf.`year` = 2006 AND tpmspf2.`year` = 2018
-GROUP BY industry_name 
+tap.payroll_year,
+tap.code,
+tap.name,
+tap.avarage_pay,
+tap2.payroll_year AS payroll_year_2,
+tap2.avarage_pay AS avarage_pay_2
+FROM t_avg_pay tap
+JOIN t_avg_pay tap2
+ON
+tap2.payroll_year = tap.payroll_year +1
+WHERE tap2.code = tap.code
 ;
 
-
 SELECT *,
-CASE 
-	WHEN avg_pay_2018 > avg_pay_2006 THEN 1
-	ELSE 0	
-END AS pay_raise
-FROM t_avg_pay_comp tapc
+CASE
+	WHEN avarage_pay_2 > avarage_pay THEN 1
+	ELSE 0
+END AS compare
+FROM t_avg_pay_yearly tapy
 ;
 
 
